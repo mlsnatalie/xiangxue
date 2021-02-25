@@ -1,4 +1,4 @@
-package cn.enjoyedu.concurrent;
+package cn.enjoyedu.concurrent.threadlocal;
 
 /**
  *@author Mark老师   享学课堂 https://enjoy.ke.qq.com 
@@ -7,7 +7,12 @@ package cn.enjoyedu.concurrent;
  */
 public class UseThreadLocal {
 	
-	//TODO
+	static ThreadLocal<Integer> threadLocal = new ThreadLocal<Integer>(){
+        @Override
+        protected Integer initialValue() {
+            return 1;
+        }
+    };
 
     /**
      * 运行3个线程
@@ -23,7 +28,8 @@ public class UseThreadLocal {
     }
     
     /**
-     *类说明：测试线程，线程的工作是将ThreadLocal变量的值变化，并写回，看看线程之间是否会互相影响
+     *类说明：测试线程，线程的工作是将ThreadLocal变量的值变化，并写回，
+     * 看看线程之间是否会互相影响
      */
     public static class TestThread implements Runnable{
         int id;
@@ -32,7 +38,12 @@ public class UseThreadLocal {
         }
         public void run() {
             System.out.println(Thread.currentThread().getName()+":start");
-            //TODO
+            Integer s = threadLocal.get();
+            s = s+id;
+            threadLocal.set(s);
+            System.out.println(Thread.currentThread().getName()+" :"
+                    +threadLocal.get());
+            //threadLocal.remove();
         }
     }
 

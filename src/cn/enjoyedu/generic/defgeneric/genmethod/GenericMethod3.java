@@ -28,6 +28,7 @@ public class GenericMethod3 {
     }
 
     static class GenerateTest<T>{
+        //普通方法
         public void show_1(T t){
             System.out.println(t.toString());
         }

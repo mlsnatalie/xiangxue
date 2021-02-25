@@ -28,6 +28,12 @@ public class StartAndRun {
     }
 
     public static void main(String[] args) {
-    	//TODO
+        ThreadRun beCalled = new ThreadRun();
+        beCalled.setName("beCalled");
+        //beCalled.run();
+
+        new User().us();
+
+        beCalled.start();
     }
 }

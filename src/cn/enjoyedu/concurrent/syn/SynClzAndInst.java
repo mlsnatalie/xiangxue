@@ -18,11 +18,30 @@ public class SynClzAndInst {
         }
     }
 
-  //使用对象锁的线程
-    private static class InstanceSyn implements Runnable{
+    //类锁，实际是锁类的class对象
+    private static synchronized void synClass(){
+        SleepTools.second(1);
+        System.out.println("synClass going...");
+        SleepTools.second(1);
+        System.out.println("synClass end");
+    }
+
+    private static Object obj = new Object();
+
+    private void synStaticObject(){
+        synchronized (obj){//类似于类锁，Obj在全虚拟机只有一份
+            SleepTools.second(1);
+            System.out.println("synClass going...");
+            SleepTools.second(1);
+            System.out.println("synClass end");
+        }
+    }
+
+  //使用对象锁
+    private static class SynObject implements Runnable{
         private SynClzAndInst synClzAndInst;
 
-        public InstanceSyn(SynClzAndInst synClzAndInst) {
+        public SynObject(SynClzAndInst synClzAndInst) {
             this.synClzAndInst = synClzAndInst;
         }
 
@@ -33,11 +52,11 @@ public class SynClzAndInst {
         }
     }
 
-  //使用对象锁的线程
-    private static class Instance2Syn implements Runnable{
+  //使用对象锁
+    private static class SynObject2 implements Runnable{
         private SynClzAndInst synClzAndInst;
 
-        public Instance2Syn(SynClzAndInst synClzAndInst) {
+        public SynObject2(SynClzAndInst synClzAndInst) {
             this.synClzAndInst = synClzAndInst;
         }
         @Override
@@ -63,15 +82,20 @@ public class SynClzAndInst {
         System.out.println("synInstance2 ended "+this.toString());
     }
 
-    //类锁，实际是锁类的class对象
-    private static synchronized void synClass(){
-        SleepTools.second(1);
-        System.out.println("synClass going...");
-        SleepTools.second(1);
-        System.out.println("synClass end");
-    }
+
 
     public static void main(String[] args) {
-    	//TODO
+        SynClzAndInst synClzAndInst = new SynClzAndInst();
+        Thread t1 = new Thread(new SynObject(synClzAndInst));
+
+        SynClzAndInst synClzAndInst2 = new SynClzAndInst();
+        Thread t2 = new Thread(new SynObject2(synClzAndInst));
+
+        t1.start();
+        t2.start();
+
+        SynClass synClass = new SynClass();
+        synClass.start();
+        SleepTools.second(1);
     }
 }

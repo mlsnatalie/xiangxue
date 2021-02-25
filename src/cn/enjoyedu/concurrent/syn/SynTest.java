@@ -8,6 +8,7 @@ package cn.enjoyedu.concurrent.syn;
 public class SynTest {
 
 	private long count =0;
+	private Object obj = new Object();//作为一个锁
 
 	public long getCount() {
 		return count;
@@ -19,7 +20,20 @@ public class SynTest {
 
 	//count进行累加
 	public void incCount(){
-		count++;
+		synchronized (obj){
+			count++;
+		}
+	}
+
+	public synchronized void incCount2(){
+			count++;
+	}
+
+	//count进行累加
+	public void incCount3(){
+		synchronized (this){
+			count++;
+		}
 	}
 
 	//线程
@@ -34,7 +48,7 @@ public class SynTest {
 		@Override
 		public void run() {
 			for(int i=0;i<10000;i++){
-				simplOper.incCount();
+				simplOper.incCount();//count = count+10000
 			}
 		}
 	}
@@ -47,6 +61,6 @@ public class SynTest {
 		count1.start();
 		count2.start();
 		Thread.sleep(50);
-		System.out.println(simplOper.count);
+		System.out.println(simplOper.count);//20000
 	}
 }
