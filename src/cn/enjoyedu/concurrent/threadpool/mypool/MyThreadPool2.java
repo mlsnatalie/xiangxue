@@ -37,7 +37,8 @@ public class MyThreadPool2 {
         	workThreads[i] = new WorkThread();
         	workThreads[i].start();
         }
-        Runtime.getRuntime().availableProcessors();
+        // int count = Runtime.getRuntime().availableProcessors();
+        // Runtime.getRuntime().availableProcessors()*2
     }
 
 

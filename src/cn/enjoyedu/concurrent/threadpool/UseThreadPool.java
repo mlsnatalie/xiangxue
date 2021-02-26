@@ -55,8 +55,21 @@ public class UseThreadPool {
     	
     }
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException
+    public static void main(String[] args)
+            throws InterruptedException, ExecutionException
     {
-        //TODO
+    	ExecutorService pool = new ThreadPoolExecutor(2,4,3,TimeUnit.SECONDS,
+    			new ArrayBlockingQueue<Runnable>(10),
+    			new ThreadPoolExecutor.DiscardOldestPolicy());
+        for(int i=0;i<6;i++) {
+            Worker worker = new Worker("worker_"+i);
+            pool.execute(worker);
+        }
+        for(int i=0;i<6;i++) {
+            CallWorker callWorker = new CallWorker("callWorker_"+i);
+            Future<String> result = pool.submit(callWorker);
+            System.out.println(result.get());
+        }
+        pool.shutdown();
     }
 }
